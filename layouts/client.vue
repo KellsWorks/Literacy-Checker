@@ -34,17 +34,18 @@
       
       <v-toolbar-title class="text-uppercase font-weight-medium" v-text="title" />
       <v-spacer />
-      <v-btn
-        icon
-        @click.stop="rightDrawer = !rightDrawer"
-      >
-        <v-icon>mdi-menu</v-icon>
-      </v-btn>
+      <v-btn icon color="black"><v-icon>
+        search
+      </v-icon></v-btn>
+      <v-btn icon color="black"><v-icon>
+        notifications
+      </v-icon></v-btn>
+      <v-btn icon color="black"><v-icon>
+        person
+      </v-icon></v-btn>
     </v-app-bar>
     <v-main>
-      <v-container>
-        <Nuxt />
-      </v-container>
+      <Nuxt />
     </v-main>
     <v-navigation-drawer
       v-model="rightDrawer"
@@ -67,7 +68,7 @@
       :absolute="!fixed"
       app
     >
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+      <span class="text-uppercase">Computer Literacy & Familiarity Testing &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>
   </v-app>
 </template>
