@@ -25,7 +25,7 @@
                 <v-icon>category</v-icon>
               </v-app-bar-nav-icon>
 
-              <v-app-bar-title>
+              <v-app-bar-title class="text-uppercase">
                 Recent Tests
               </v-app-bar-title>
 
@@ -60,7 +60,15 @@
 
                   <v-list-item-content>
                     <v-list-item-title v-html="item.title"></v-list-item-title>
-                    <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+                    <v-list-item-subtitle v-html="''+item.subtitle"></v-list-item-subtitle>
+                    <v-card-actions>
+                      <v-btn small dark tile class="black white--text">Retake</v-btn>
+                      <v-spacer></v-spacer>
+                      <v-icon color="red" class="mr-2">thumbs_up_down</v-icon>
+                      40%
+                      <v-icon color="blue" class="mr-2 ml-3">timer</v-icon>
+                      5 Minutes
+                    </v-card-actions>
                   </v-list-item-content>
                 </v-list-item>
               </template>
@@ -95,16 +103,57 @@
               <v-card-text>
                 <v-icon size="40" color="white">thumbs_up_down</v-icon>
                 <p class="white--text mt-3 text-h4">53%</p>
-                <p class="white--text text-body-1">Rating</p>
+                <p class="white--text text-body-1">Overall Rating</p>
               </v-card-text>
             </v-card>
           </v-col>
         </v-row>
 
-        <v-card class="mt-10" tile>
+        <v-card class="mt-10" tile outlined>
           <v-toolbar class="black">
-            <v-toolbar-title class="white--text">Tests Activities</v-toolbar-title>
+            <v-toolbar-title class="white--text text-uppercase">Available Tests</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-btn icon dark>
+              <v-icon>help</v-icon>
+            </v-btn>
           </v-toolbar>
+          <v-card-text>
+            <v-list three-line>
+              <template v-for="(item, index) in items">
+                <v-subheader
+                  v-if="item.header"
+                  :key="item.header"
+                  v-text="item.header"
+                ></v-subheader>
+
+                <v-divider
+                  v-else-if="item.divider"
+                  :key="index"
+                  :inset="item.inset"
+                ></v-divider>
+
+                <v-list-item
+                  v-else
+                  :key="item.title"
+                >
+                  <v-list-item-avatar>
+                    <v-icon class="black--text">category</v-icon>
+                  </v-list-item-avatar>
+
+                  <v-list-item-content>
+                    <v-list-item-title v-html="item.title"></v-list-item-title>
+                    <v-list-item-subtitle v-html="''+item.subtitle"></v-list-item-subtitle>
+                    <v-card-actions>
+                      <v-btn small dark tile class="black white--text">Take</v-btn>
+                      <v-spacer></v-spacer>
+                      <v-icon color="blue" class="mr-2 ml-3">timer</v-icon>
+                      5 Minutes
+                    </v-card-actions>
+                  </v-list-item-content>
+                </v-list-item>
+              </template>
+            </v-list>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -121,10 +170,27 @@ export default {
         {
           avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
           title: '10 Mins Typing Test',
-          subtitle: `<span class="text--white rounded pa-1 red mb-2">Failed</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+          subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
         },
         { divider: true, inset: true },
-        
+        {
+          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+          title: '10 Mins Typing Test',
+          subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+        },
+        { divider: true, inset: true },
+        {
+          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+          title: '10 Mins Typing Test',
+          subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+        },
+        { divider: true, inset: true },
+        {
+          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+          title: '10 Mins Typing Test',
+          subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+        },
+        { divider: true, inset: true },
       ],
       }
     }

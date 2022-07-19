@@ -1,6 +1,12 @@
 <template>
-  <div>
-    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Facere delectus sunt minus temporibus qui vel? Nemo quidem possimus itaque? Illum ducimus autem placeat aliquam laborum, in mollitia hic necessitatibus sed?
+  <div class="pa-3">
+    <v-card flat outlined tile>
+      <v-toolbar color="black" dark>
+        <v-toolbar-title class="text-uppercase">
+          Client Account
+        </v-toolbar-title>
+      </v-toolbar>
+    </v-card>
   </div>
 </template>
 
