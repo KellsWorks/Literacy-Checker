@@ -83,7 +83,7 @@
           <v-col cols="4">
             <v-card tile class="black">
               <v-card-text>
-                <v-icon size="40" color="white">category</v-icon>
+                <v-icon size="40" color="orange">category</v-icon>
                 <p class="white--text mt-3 text-h4">23</p>
                 <p class="white--text text-body-1">Completed</p>
               </v-card-text>
@@ -92,7 +92,7 @@
           <v-col cols="4">
             <v-card tile class="black">
               <v-card-text>
-                <v-icon size="40" color="white">timer</v-icon>
+                <v-icon size="40" color="blue">timer</v-icon>
                 <p class="white--text mt-3 text-h4">13:04:55</p>
                 <p class="white--text text-body-1">Total Time Elasped</p>
               </v-card-text>
@@ -101,7 +101,7 @@
           <v-col cols="4">
             <v-card tile class="black">
               <v-card-text>
-                <v-icon size="40" color="white">thumbs_up_down</v-icon>
+                <v-icon size="40" color="green">thumbs_up_down</v-icon>
                 <p class="white--text mt-3 text-h4">53%</p>
                 <p class="white--text text-body-1">Overall Rating</p>
               </v-card-text>

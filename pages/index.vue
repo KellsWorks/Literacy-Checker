@@ -11,6 +11,7 @@
           label="Email Address"
           outlined
           dense
+          active-class="black"
         ></v-text-field>
 
         <v-text-field

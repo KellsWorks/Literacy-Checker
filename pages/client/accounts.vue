@@ -6,6 +6,15 @@
           Client Account
         </v-toolbar-title>
       </v-toolbar>
+      <v-card-text>
+        <v-row>
+          <v-col cols="4">
+            <v-icon size="100" color="black">person</v-icon>
+          </v-col>
+          
+        </v-row>
+        
+      </v-card-text>
     </v-card>
   </div>
 </template>
