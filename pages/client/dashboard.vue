@@ -171,12 +171,25 @@
         <v-btn v-show="timer.isRunning" flat dark color="red" @click="stopTimer()" tile>Exit test</v-btn>
 
         <v-spacer/>
+
         <v-card class="black" tile>
           <v-card-text class="text-h6 white--text">
             {{timer.hours}} : {{timer.minutes}} : {{timer.seconds}}
           </v-card-text>
         </v-card>
+
       </v-card-actions>
+
+      <v-alert
+        dense
+        text
+        type="success"
+        color="black"
+        icon="info"
+        v-show="timer.isRunning"
+      >
+        <strong>Note:</strong> Do not close this page or refresh it otherwise your progress will be invalidated
+      </v-alert>
 
       <template>
         <v-stepper
@@ -347,7 +360,7 @@ export default {
   mounted(){
     watchEffect(async () => {
     if(this.timer.isExpired.value) {
-      console.warn('IsExpired')
+      this.steps = 0
     }
   })
   }
