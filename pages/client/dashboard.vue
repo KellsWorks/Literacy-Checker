@@ -305,64 +305,63 @@
 
 <script>
 
-import {  watchEffect } from "vue";
 import { useTimer } from 'vue-timer-hook';
 
 export default {
-    layout: 'client',
-    methods: {
-      startTimer(){
-        this.timer = useTimer(new Date().setSeconds(new Date().getSeconds() + 600))
-        this.timer.start()
-        this.steps = 1
-      },
-      stopTimer(){
-        this.timer.pause()
-        this.timer = useTimer(new Date().setSeconds(0))
-        this.steps = 0
-      },
+  layout: 'client',
+  methods: {
+    startTimer(){
+      this.timer = useTimer(new Date().setSeconds(new Date().getSeconds() + 600))
+      this.timer.start()
+      this.steps = 1
     },
-    data(){
+    stopTimer(){
+      this.timer.pause()
+      
+      console.log(this.timer)
+      this.steps = 0
 
-      return{
-        showTest: false,
-        timer: useTimer(new Date().setSeconds(0)),
-        steps: 0,
-        items: [
-        {
-          id: 1,
-          title: '10 Mins Typing Test',
-          subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-        },
-        { divider: true, inset: true },
-        {
-          id: 2,
-          title: '20 Mins Typing Test',
-          subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-        },
-        { divider: true, inset: true },
-        {
-          id: 3,
-          title: '30 Mins Typing Test',
-          subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-        },
-        { divider: true, inset: true },
-        {
-          id: 4,
-          title: '40 Mins Typing Test',
-          subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-        },
-        { divider: true, inset: true },
-      ],
-      }
+      this.timer = useTimer(new Date().setSeconds(0))
     },
+  },
+  data(){
 
-  mounted(){
-    watchEffect(async () => {
+    return{
+      showTest: false,
+      timer: useTimer(new Date().setSeconds(0)),
+      steps: 0,
+      items: [
+      {
+        id: 1,
+        title: '10 Mins Typing Test',
+        subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+      },
+      { divider: true, inset: true },
+      {
+        id: 2,
+        title: '20 Mins Typing Test',
+        subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+      },
+      { divider: true, inset: true },
+      {
+        id: 3,
+        title: '30 Mins Typing Test',
+        subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+      },
+      { divider: true, inset: true },
+      {
+        id: 4,
+        title: '40 Mins Typing Test',
+        subtitle: `&mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
+      },
+      { divider: true, inset: true },
+    ],
+    }
+  },
+  watch(){
     if(this.timer.isExpired.value) {
       this.steps = 0
     }
-  })
   }
 }
 </script>
