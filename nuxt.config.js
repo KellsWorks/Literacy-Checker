@@ -37,6 +37,7 @@ export default {
   plugins: [
     { src: '~/plugins/ApexCharts', mode: 'client' },
     { src: '~/plugins/vuex-persist', mode: 'client' },
+    { src: '~/plugins/vue-notification', mode: 'client' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

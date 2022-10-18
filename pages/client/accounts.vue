@@ -3,7 +3,7 @@
     <v-card flat outlined tile>
       <v-toolbar color="black" dark>
         <v-toolbar-title class="text-uppercase">
-          Client Account
+          Client Account {{ this.$auth.strategy.token}}
         </v-toolbar-title>
       </v-toolbar>
       <v-card-text>

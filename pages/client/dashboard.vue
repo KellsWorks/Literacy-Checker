@@ -198,105 +198,47 @@
           tile
           disabled
           outlined
+          v-for="(item, index) in tests"
+          :key="index"
         >
           <v-stepper-step
-            :complete="steps > 1"
-            step="1"
+            :complete="index+1 < index"
+            :step="index+1"
           >
             Typing Test
-            <small>Type the following words into the text area below: </small>
+            <small>Type the following words into the text area below:</small>
           </v-stepper-step>
 
-          <v-stepper-content step="1">
+          <v-stepper-content :step="index+1">
             <v-card
-              color="grey lighten-1"
+              color="grey lighten-4"
               class="mb-12"
               height="200px"
               flat
 
-            ></v-card>
+            >
+            <v-card-text>
+
+              <p>{{item.content}}</p>
+
+              <v-textarea v-model="content" color="black" label="Content">
+
+              </v-textarea>
+            </v-card-text>
+            </v-card>
             <v-btn
               color="primary"
-              @click="steps = 2"
+              @click="tests.length == index+1 ? stopTimer() : steps = 2; content = ''"
               tile
+              :disabled="content != item.content"
             >
-              Continue
+              {{tests.length == index+1 ? 'Finish' : 'Continue'}}
             </v-btn>
             <v-btn text>
               Cancel
             </v-btn>
           </v-stepper-content>
 
-          <v-stepper-step
-            :complete="steps > 2"
-            step="2"
-          >
-            Configure analytics for this app
-          </v-stepper-step>
-
-          <v-stepper-content step="2">
-            <v-card
-              color="grey lighten-1"
-              class="mb-12"
-              height="200px"
-            ></v-card>
-            <v-btn
-              color="primary"
-              @click="steps = 3"
-              tile
-            >
-              Continue
-            </v-btn>
-            <v-btn text>
-              Cancel
-            </v-btn>
-          </v-stepper-content>
-
-          <v-stepper-step
-            :complete="steps > 3"
-            step="3"
-          >
-            Select an ad format and name ad unit
-          </v-stepper-step>
-
-          <v-stepper-content step="3">
-            <v-card
-              color="grey lighten-1"
-              class="mb-12"
-              height="200px"
-            ></v-card>
-            <v-btn
-              color="primary"
-              @click="steps = 4"
-              tile
-            >
-              Continue
-            </v-btn>
-            <v-btn text>
-              Cancel
-            </v-btn>
-          </v-stepper-content>
-
-          <v-stepper-step step="4">
-            View setup instructions
-          </v-stepper-step>
-          <v-stepper-content step="4">
-            <v-card
-              color="grey lighten-1"
-              class="mb-12"
-              height="200px"
-            ></v-card>
-            <v-btn
-              color="primary"
-              @click="steps = 1"
-              tile
-            >
-              Continue
-            </v-btn>
-            <v-btn text>
-              Cancel
-            </v-btn>
-          </v-stepper-content>
         </v-stepper>
       </template>
     </div>
@@ -317,19 +259,38 @@ export default {
     },
     stopTimer(){
       this.timer.pause()
+
+      let finalScore = ((this.timer.minutes / 10) * 100)
       
-      console.log(this.timer)
+      this.$toast.open({
+        message: finalScore < 50 ? `Oops! You failed by ${finalScore}% on this test. Please try again` : `Congratulations🎉️ You scored ${finalScore}% on this test`,
+        type: finalScore < 50 ? 'error' : 'success'
+      })
       this.steps = 0
 
       this.timer = useTimer(new Date().setSeconds(0))
     },
+    loadTest(){
+      this.$axios.$get('api/tests/').then((response) => {
+        this.tests = response.tests
+      }).catch((error) => {
+        console.log(error)
+      })
+    }
   },
+
+  mounted() {
+    this.loadTest()
+  },
+
   data(){
 
     return{
       showTest: false,
       timer: useTimer(new Date().setSeconds(0)),
       steps: 0,
+      content: '',
+      tests: [],
       items: [
       {
         id: 1,

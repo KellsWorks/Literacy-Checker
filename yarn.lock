@@ -8470,6 +8470,11 @@ vue-timer-hook@^1.0.0:
   resolved "https://registry.yarnpkg.com/vue-timer-hook/-/vue-timer-hook-1.0.0.tgz#9a315a83a8d776ed5c75ab0f82e5846adcd57844"
   integrity sha512-m7YMkrU2788NHDkAC38Kr+QyMkZiWE4F7yWaQKNugf9ZeMucnIHTtwPkAzUtq5q0dw+M5xGdvnQapzSdquhoAQ==
 
+vue-toast-notification@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/vue-toast-notification/-/vue-toast-notification-0.6.3.tgz#79dbb52f56a41d700d5ed98fbffe95b8c8da6f24"
+  integrity sha512-w4daYmEWsUsqDfON1snfhMUxxm+Blf9OISnoOeKrN3f7HqKvH4pQYwIcPOvIr9cX2EOsRReMWfv8Kha03n9nqw==
+
 vue@^2.6.12, vue@^2.6.14:
   version "2.7.7"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.7.7.tgz#e3a966944e461e4abb496c82362e8763e98e6527"
