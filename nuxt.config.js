@@ -36,6 +36,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/ApexCharts', mode: 'client' },
+    { src: '~/plugins/vuex-persist', mode: 'client' },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -51,7 +52,46 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',
   ],
+
+  axios: {
+      baseURL: 'http://127.0.0.1:8000/',
+   },
+    auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: {
+            url: '/api/auth/login/',
+            method: 'post',
+            propertyName: 'access',
+          },
+          logout: { url: 'token/logout/', method: 'post' },
+          user: false
+        },
+        cookie: false,
+        localStorage: false,
+
+        token: {
+          property: 'access',
+          global: true,
+          required: true,
+          type: 'Bearer',
+          maxAge: 3600,
+        },
+  
+        tokenType: 'Token',
+        tokenName: 'Authorization',
+      },
+      redirect: {
+        login: '/login',
+        home: '/',
+      },
+    },
+  },
+
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
