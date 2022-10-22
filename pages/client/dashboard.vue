@@ -5,7 +5,7 @@
       <v-btn @click="showTest = !showTest" tile elevation="0" color="black white--text"> <v-icon>flag
 
 
-      </v-icon> Take a test</v-btn>
+      </v-icon> Take a test </v-btn>
       
       <v-row>
         <v-col cols="4">
@@ -38,37 +38,30 @@
               </v-toolbar>
 
               <v-list three-line>
-                <template v-for="(item, index) in items">
-                  <v-subheader
-                    v-if="item.header"
-                    :key="item.header"
-                    v-text="item.header"
-                  ></v-subheader>
-
-                  <v-divider
-                    v-else-if="item.divider"
-                    :key="index"
-                    :inset="item.inset"
-                  ></v-divider>
+                <template >
 
                   <v-list-item
-                    v-else
-                    :key="item.title"
+                    v-for="(item, index) in userTests"
+                    :key="index"
                   >
                     <v-list-item-avatar>
                       <v-icon class="black--text">category</v-icon>
                     </v-list-item-avatar>
 
                     <v-list-item-content>
-                      <v-list-item-title v-html="item.title"></v-list-item-title>
-                      <v-list-item-subtitle v-html="''+item.subtitle"></v-list-item-subtitle>
+                      <v-list-item-title v-html="item.test.title"></v-list-item-title>
+                      <v-list-item-subtitle>{{`This test had ${item.test.questions.length} questions available`}}</v-list-item-subtitle>
                       <v-card-actions>
+
                         <v-btn small dark tile class="black white--text">Retake</v-btn>
+                        
                         <v-spacer></v-spacer>
-                        <v-icon color="red" class="mr-2">thumbs_up_down</v-icon>
-                        40%
+                        
+                        <v-icon :color="item.score < 40 ? 'red' : 'green'" class="mr-2">thumbs_up_down</v-icon>
+                        {{item.score}}%
+                        
                         <v-icon color="blue" class="mr-2 ml-3">timer</v-icon>
-                        5 Minutes
+                        {{item.test.duration}} Minutes
                       </v-card-actions>
                     </v-list-item-content>
                   </v-list-item>
@@ -85,8 +78,8 @@
               <v-card tile class="black">
                 <v-card-text>
                   <v-icon size="40" color="orange">category</v-icon>
-                  <p class="white--text mt-3 text-h4">23</p>
-                  <p class="white--text text-body-1">Completed</p>
+                  <p class="white--text mt-3 text-h4">{{userTests.length}}</p>
+                  <p class="white--text">Completed</p>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -95,7 +88,7 @@
                 <v-card-text>
                   <v-icon size="40" color="blue">timer</v-icon>
                   <p class="white--text mt-3 text-h4">13:04:55</p>
-                  <p class="white--text text-body-1">Total Time Elasped</p>
+                  <p class="white--text">Total Time Elasped</p>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -103,8 +96,8 @@
               <v-card tile class="black">
                 <v-card-text>
                   <v-icon size="40" color="green">thumbs_up_down</v-icon>
-                  <p class="white--text mt-3 text-h4">53%</p>
-                  <p class="white--text text-body-1">Overall Rating</p>
+                  <p class="white--text mt-3 text-h4">{{rating}}%</p>
+                  <p class="white--text">Overall Rating</p>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -120,22 +113,11 @@
             </v-toolbar>
             <v-card-text>
               <v-list three-line>
-                <template v-for="(item, index) in items">
-                  <v-subheader
-                    v-if="item.header"
-                    :key="index"
-                    v-text="item.header"
-                  ></v-subheader>
-
-                  <v-divider
-                    v-else-if="item.divider"
-                    :key="item.id"
-                    :inset="item.inset"
-                  ></v-divider>
+                <template >
 
                   <v-list-item
-                    v-else
-                    :key="item.title"
+                  v-for="(item, index) in tests"
+                  :key="index"
                   >
                     <v-list-item-avatar>
                       <v-icon class="black--text">category</v-icon>
@@ -143,15 +125,17 @@
 
                     <v-list-item-content>
                       <v-list-item-title v-html="item.title"></v-list-item-title>
-                      <v-list-item-subtitle v-html="''+item.subtitle"></v-list-item-subtitle>
+                      <v-list-item-subtitle>{{`${item.questions.length} questions available for this test`}}</v-list-item-subtitle>
                       <v-card-actions>
-                        <v-btn small dark tile class="black white--text">Take</v-btn>
+                        <v-btn @click="showTest = !showTest; selectedTest = item.id"  small dark tile class="black white--text">Take</v-btn>
                         <v-spacer></v-spacer>
                         <v-icon color="blue" class="mr-2 ml-3">timer</v-icon>
-                        5 Minutes
+                        {{item.duration}} Minutes
                       </v-card-actions>
                     </v-list-item-content>
                   </v-list-item>
+
+                  <v-divider></v-divider>
                 </template>
               </v-list>
             </v-card-text>
@@ -168,7 +152,7 @@
 
         <v-btn v-show="!timer.isRunning" flat dark color="black" @click="startTimer()" tile>Start test</v-btn>
 
-        <v-btn v-show="timer.isRunning" flat dark color="red" @click="stopTimer()" tile>Exit test</v-btn>
+        <v-btn v-show="timer.isRunning" flat dark color="red" @click="stopTimer(tests[0].test)" tile>Exit test</v-btn>
 
         <v-spacer/>
 
@@ -202,14 +186,17 @@
           :key="index"
         >
           <v-stepper-step
+            v-for="(item_, index_) in item.questions"
+            :key="index_"
             :complete="index+1 < index"
             :step="index+1"
           >
-            Typing Test
+            {{item.title}}
             <small>Type the following words into the text area below:</small>
           </v-stepper-step>
 
-          <v-stepper-content :step="index+1">
+          <v-stepper-content :step="index+1" v-for="(item_, index_) in item.questions"
+            :key="index_">
             <v-card
               color="grey lighten-4"
               class="mb-12"
@@ -219,7 +206,7 @@
             >
             <v-card-text>
 
-              <p>{{item.content}}</p>
+              <p>{{item_.content}}</p>
 
               <v-textarea v-model="content" color="black" label="Content">
 
@@ -228,7 +215,7 @@
             </v-card>
             <v-btn
               color="primary"
-              @click="tests.length == index+1 ? stopTimer() : steps = 2; content = ''"
+              @click="tests.length == index+1 ? stopTimer(tests[0].test) : steps = 2; content = ''"
               tile
               :disabled="content != item.content"
             >
@@ -257,10 +244,12 @@ export default {
       this.timer.start()
       this.steps = 1
     },
-    stopTimer(){
+    stopTimer(item){
       this.timer.pause()
 
       let finalScore = ((this.timer.minutes / 10) * 100)
+
+      this.score = finalScore
       
       this.$toast.open({
         message: finalScore < 50 ? `Oops! You failed by ${finalScore}% on this test. Please try again` : `Congratulations🎉️ You scored ${finalScore}% on this test`,
@@ -269,10 +258,40 @@ export default {
       this.steps = 0
 
       this.timer = useTimer(new Date().setSeconds(0))
+
+      this.recordResults(item)
     },
     loadTest(){
       this.$axios.$get('api/tests/').then((response) => {
         this.tests = response.tests
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    async fetchUser(){
+      let response = await this.$auth.fetchUser()
+
+      if(response.data){
+        console.log(response.data)
+      }
+    },
+    
+    async recordResults(item){
+      this.$axios.$post('api/tests/user-tests', { 'test_id': item.id, 'score': this.score, user: this.$auth.user.pk }).then((response) => {
+        this.tests = response.tests
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+    async fetchUserTests(){
+      this.$axios.$get('api/tests/user-tests').then((response) => {
+        this.userTests = response.tests
+
+        this.userTests.forEach((item, index) => {
+          
+          this.rating = this.rating + item.score / this.userTests.length
+
+        })
       }).catch((error) => {
         console.log(error)
       })
@@ -281,6 +300,8 @@ export default {
 
   mounted() {
     this.loadTest()
+    this.fetchUser()
+    this.fetchUserTests()
   },
 
   data(){
@@ -289,8 +310,11 @@ export default {
       showTest: false,
       timer: useTimer(new Date().setSeconds(0)),
       steps: 0,
+      selectedTest: '',
       content: '',
       tests: [],
+      userTests: [],
+      rating: 0,
       items: [
       {
         id: 1,
@@ -317,6 +341,7 @@ export default {
       },
       { divider: true, inset: true },
     ],
+    score: ''
     }
   },
   watch(){

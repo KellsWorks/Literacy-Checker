@@ -1,34 +1,12 @@
 <template>
   <v-app dark>
-    <v-navigation-drawer
-      v-model="drawer"
-      :mini-variant="miniVariant"
-      :clipped="clipped"
-      fixed
-      app
-    >
-      <v-list class="mt-n2">
-        <v-list-item
-          v-for="(item, i) in items"
-          :key="i"
-          :to="item.to"
-          router
-          exact
-        >
-          <v-list-item-action>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-action>
-          <v-list-item-content>
-            <v-list-item-title v-text="item.title" />
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
     <v-app-bar
       :clipped-left="clipped"
       fixed
       app
       flat
+      class="white"
+      style="border-bottom: 1px solid #EEEEEE !important;"
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
       
@@ -75,6 +53,9 @@
         </div>
       </template>
     </v-app-bar>
+
+    <v-divider></v-divider>
+
     <v-main>
       <Nuxt />
     </v-main>
@@ -95,9 +76,12 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+
     <v-footer
       :absolute="!fixed"
       app
+      style="border-top: 1px solid #EEEEEE !important;"
+      color="white"
     >
       <span class="text-uppercase">Computer Literacy & Familiarity Testing &copy; {{ new Date().getFullYear() }}</span>
     </v-footer>

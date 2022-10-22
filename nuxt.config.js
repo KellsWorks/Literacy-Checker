@@ -54,13 +54,21 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/auth',
+    '@nuxtjs/auth-next',
   ],
 
+  router: {
+    middleware: 'auth'
+  },
+
+  proxy: {
+    '/': { target: 'http://localhost:8000', pathRewrite: {'^/': ''} }
+  },
+
   axios: {
-      baseURL: 'http://127.0.0.1:8000/',
-   },
-    auth: {
+    baseURL: 'http://127.0.0.1:8000/',
+  },
+  auth: {
     strategies: {
       local: {
         endpoints: {
@@ -70,26 +78,28 @@ export default {
             propertyName: 'access',
           },
           logout: { url: 'token/logout/', method: 'post' },
-          user: false
+          user: { url: '/dj-rest-auth/user/', method: 'get'},
+        },
+        user: {
+          property: ''
         },
         cookie: false,
         localStorage: false,
 
         token: {
-          property: 'access',
+          property: 'data.access',
           global: true,
           required: true,
           type: 'Bearer',
           maxAge: 3600,
         },
   
-        tokenType: 'Token',
-        tokenName: 'Authorization',
+        tokenRequired: true
       },
-      redirect: {
-        login: '/login',
-        home: '/',
-      },
+      // redirect: {
+      //   login: '/login',
+      //   home: '/',
+      // },
     },
   },
 

@@ -59,16 +59,20 @@ export default {
           data: userData,
         })
 
-        if(response){
+        if(response.data){
 
           this.$auth.$storage.setUniversal('loggedIn', true)
+          this.$auth.strategy.token.set(response.data.access)
+          this.$auth.setUserToken(response.data.access, response.data.refresh)
           
+          console.log(response)
+
           this.$router.push({
             path: '/client/dashboard',
           });
         }
       } catch (error) {
-        console.log('notification unsuccessful')
+        console.log(error)
       }
     },
   },
