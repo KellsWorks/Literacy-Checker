@@ -1,5 +1,12 @@
 <template>
     <v-card tile width="400" class="mx-auto mt-10 justify-center">
+
+      <v-overlay :value="true" v-show="loading">
+        <v-progress-circular
+          indeterminate
+          size="64"
+        ></v-progress-circular>
+      </v-overlay>
       
       <v-card-text class="justify-center">
         
@@ -29,7 +36,7 @@
             @click:append="userData.showPassword = !userData.showPassword"
           ></v-text-field>
   
-          <v-btn @click="logInUser(userData)" tile block color="black" flat class="elevetion-0" dark>Log in</v-btn>
+          <v-btn v-show="!loading" @click="logInUser(userData)" tile block color="black" flat class="elevetion-0" dark>Log in</v-btn>
   
           <v-btn text class="mt-3 text-body-1 text-capitalize" to="/register">Do not have an account? <span class="blue--text ml-3">Register</span></v-btn>
           
@@ -50,12 +57,17 @@
   
       return{
         userData: { username: '', email: '', password: '', showPassword: false },
+
+        loading: false
       }
     },
     
     methods: {
       
       async logInUser(userData) {
+
+        this.loading = true 
+
         try {
           let response = await this.$auth.loginWith('local', {
             data: userData,
@@ -67,7 +79,7 @@
             this.$auth.$storage.setUniversal('loggedIn', true)
             this.$auth.strategy.token.set(response.data.access)
             
-            console.log(response)
+            this.loading = false 
   
             this.$router.push({
               path: '/client/dashboard',
@@ -75,9 +87,19 @@
           }
         } catch (error) {
           console.log(error)
+
+          this.loading = false 
         }
       },
     },
+
+    watch: {
+      overlay (val) {
+        val && setTimeout(() => {
+          this.overlay = false
+        }, 3000)
+      },
+    }
   }
   </script>
   

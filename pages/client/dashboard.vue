@@ -53,7 +53,7 @@
                       <v-list-item-subtitle>{{`This test had ${item.test.questions.length} questions available`}}</v-list-item-subtitle>
                       <v-card-actions>
 
-                        <v-btn small dark tile class="black white--text">Retake</v-btn>
+                        <v-btn small dark tile class="black white--text" @click="showTest = !showTest">Retake</v-btn>
                         
                         <v-spacer></v-spacer>
                         
@@ -87,8 +87,8 @@
               <v-card tile class="black">
                 <v-card-text>
                   <v-icon size="40" color="blue">timer</v-icon>
-                  <p class="white--text mt-3 text-h4">13:04:55</p>
-                  <p class="white--text">Total Time Elasped</p>
+                  <p class="white--text mt-3 text-h4">{{duration}}</p>
+                  <p class="white--text">Total Minutes Elasped</p>
                 </v-card-text>
               </v-card>
             </v-col>
@@ -152,7 +152,42 @@
 
         <v-btn v-show="!timer.isRunning" flat dark color="black" @click="startTimer()" tile>Start test</v-btn>
 
-        <v-btn v-show="timer.isRunning" flat dark color="red" @click="stopTimer(tests[0].test)" tile>Exit test</v-btn>
+        <template>
+          <div class="text-center">
+            <v-dialog
+              v-model="dialog"
+              width="500"
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn v-bind="attrs" v-on="on" v-show="timer.isRunning" flat dark color="red" @click="exitTest()" tile>Exit test</v-btn>
+              </template>
+
+              <v-card>
+                <v-btn dark block depressed tile class="pa-5">
+                  <v-icon>warning</v-icon>
+                  Warning
+                </v-btn>
+
+                <v-card-text class="text-body-1 mt-5">
+                  Once this action is done it cannot be reversed
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="primary"
+                    text
+                    @click="dialog = false"
+                  >
+                    Okay
+                  </v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </div>
+        </template>
 
         <v-spacer/>
 
@@ -173,6 +208,7 @@
         v-show="timer.isRunning"
       >
         <strong>Note:</strong> Do not close this page or refresh it otherwise your progress will be invalidated
+        
       </v-alert>
 
       <template>
@@ -186,8 +222,8 @@
           :key="index"
         >
           <v-stepper-step
-            v-for="(item_, index_) in item.questions"
-            :key="index_"
+            
+            
             :complete="index+1 < index"
             :step="index+1"
           >
@@ -195,37 +231,37 @@
             <small>Type the following words into the text area below:</small>
           </v-stepper-step>
 
-          <v-stepper-content :step="index+1" v-for="(item_, index_) in item.questions"
-            :key="index_">
-            <v-card
-              color="grey lighten-4"
-              class="mb-12"
-              height="200px"
-              flat
+          <v-stepper-items v-for="(item_, index_) in item.questions" :key="index_">
+            <v-stepper-content :step="index_+1" >
+              <v-card
+                class="mb-12"
+                height="200px"
+                flat
 
-            >
-            <v-card-text>
+              >
+              <v-card-text>
 
-              <p>{{item_.content}}</p>
+                <p style="pointer-events: none;" unselectable="on" class="unselectable">{{item_.content}}</p>
 
-              <v-textarea v-model="content" color="black" label="Content">
+                <v-textarea v-model="content" filled color="black" label="Content">
 
-              </v-textarea>
-            </v-card-text>
-            </v-card>
-            <v-btn
-              color="primary"
-              @click="tests.length == index+1 ? stopTimer(tests[0].test) : steps = 2; content = ''"
-              tile
-              :disabled="content != item.content"
-            >
-              {{tests.length == index+1 ? 'Finish' : 'Continue'}}
-            </v-btn>
-            <v-btn text>
-              Cancel
-            </v-btn>
-          </v-stepper-content>
-
+                </v-textarea>
+              </v-card-text>
+              </v-card>
+              <v-btn
+                color="primary"
+                @click="item.questions.length == index_+1 ? stopTimer(item) : steps = 2; content = ''"
+                tile
+                :disabled="content != item_.content"
+              >
+                {{item.questions.length == index_+1 ? 'Finish' : 'Continue'}}
+              </v-btn>
+              <v-btn text>
+                Cancel
+              </v-btn>
+            </v-stepper-content>
+            
+            </v-stepper-items>
         </v-stepper>
       </template>
     </div>
@@ -237,17 +273,28 @@
 import { useTimer } from 'vue-timer-hook';
 
 export default {
+
   layout: 'client',
+
   methods: {
     startTimer(){
       this.timer = useTimer(new Date().setSeconds(new Date().getSeconds() + 600))
       this.timer.start()
       this.steps = 1
     },
+    exitTest(){
+
+      this.timer.pause()
+
+      this.steps = 0
+
+      this.timer = useTimer(new Date().setSeconds(0))
+
+    },
     stopTimer(item){
       this.timer.pause()
 
-      let finalScore = ((this.timer.minutes / 10) * 100)
+      let finalScore = ((this.timer.minutes + (this.timer.seconds*1)/60) / 10 ) * 100
 
       this.score = finalScore
       
@@ -291,6 +338,8 @@ export default {
           
           this.rating = this.rating + item.score / this.userTests.length
 
+          this.duration = this.userTests.length * 10
+
         })
       }).catch((error) => {
         console.log(error)
@@ -312,6 +361,8 @@ export default {
       steps: 0,
       selectedTest: '',
       content: '',
+      dialog: false,
+      duration: 0,
       tests: [],
       userTests: [],
       rating: 0,
@@ -353,5 +404,10 @@ export default {
 </script>
 
 <style>
-
+.unselectable{
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
 </style>
